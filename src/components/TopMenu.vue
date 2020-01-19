@@ -21,7 +21,7 @@
 						<v-btn depressed text class="grey--text text--darken-3">Sign Out</v-btn>
 					</template>
 					<template v-else>
-						<v-btn depressed text class="pink--text text--lighten-2">Sign Up</v-btn>
+						<v-btn depressed text to="register" class="pink--text text--lighten-2">Sign Up</v-btn>
 						<v-btn depressed text class="indigo--text text--darken-1">Sign In</v-btn>
 					</template>
 				</v-toolbar-items>
