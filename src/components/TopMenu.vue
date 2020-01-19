@@ -1,0 +1,47 @@
+<template>
+	<v-layout>
+		<v-app-bar app absolute light fixed hide-on-scroll>
+			<v-btn icon large>
+				<v-avatar size="32px" tile item>
+					<v-img src="@/assets/images/favicon-32x32.png" />
+				</v-avatar>
+			</v-btn>
+			<v-toolbar-title>PicsGallery</v-toolbar-title>
+			
+			<v-spacer></v-spacer>
+			
+			<v-toolbar max-width="430" flat class="d-flex flex-row justify-end">
+				<v-toolbar-items class="px-0">
+					<v-btn depressed text class="grey--text text--darken-3">Albums</v-btn>
+					<v-btn depressed text class="grey--text text--darken-3">Users</v-btn>
+
+					<template v-if="isAuth">
+						<v-btn depressed text class="grey--text text--darken-3">Home</v-btn>
+						<v-btn depressed text class="grey--text text--darken-3">Account</v-btn>
+						<v-btn depressed text class="grey--text text--darken-3">Sign Out</v-btn>
+					</template>
+					<template v-else>
+						<v-btn depressed text class="pink--text text--lighten-2">Sign Up</v-btn>
+						<v-btn depressed text class="indigo--text text--darken-1">Sign In</v-btn>
+					</template>
+				</v-toolbar-items>
+			</v-toolbar>
+		</v-app-bar>
+	</v-layout>
+</template>
+<script>
+import { mapGetters } from 'vuex'
+export default {
+	name: 'top-menu',
+
+	data: () => ({
+		//
+	}),
+
+	computed: {
+		...mapGetters({
+			isAuth: 'checkAuth'
+		})
+	}
+}
+</script>
