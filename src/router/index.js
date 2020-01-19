@@ -7,6 +7,11 @@ const routes = [
   {
     path: '/',
     name: 'home'
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: ()=> import('@/views/Register')
   }
 ]
 
