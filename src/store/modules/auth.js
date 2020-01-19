@@ -1,6 +1,6 @@
 const auth = {
 	state: {
-		isAuthenticated: true
+		isAuthenticated: false
 	},
 
 	getters: {
