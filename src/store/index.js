@@ -8,10 +8,22 @@ import auth from './modules/auth'
 
 export default new Vuex.Store({
   state: {
+    requestStatus: false,
+    globalMessage: ''
   },
   mutations: {
+    setRequestStatus (state, bool) {
+      state.requestStatus = bool
+    },
+    setGlobalMessage (state, message) {
+      state.globalMessage = message
+    }
   },
   actions: {
+  },
+  getters: {
+    getRequestStatus: state => state.requestStatus,
+    getGlobalMessage: state => state.globalMessage
   },
   modules: {
     auth: auth
