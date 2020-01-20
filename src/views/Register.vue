@@ -2,7 +2,9 @@
 	<v-layout>
 		<v-row align="start" justify="center">
 			<v-col cols="12" sm="8" md="4">
-				<v-card elevation="5">
+				<v-alert v-show="getGlobalMessage" type="success" transition="scale-transition" dense dismissible>{{ getGlobalMessage }}</v-alert>
+				<v-card elevation="5" loader-height="10">
+					<v-progress-linear color="teal" :active="getRequestStatus" height="8" :indeterminate="getRequestStatus" bottom></v-progress-linear>
 					<v-toolbar
 					color="primary"
 					flat
@@ -38,7 +40,7 @@
 					</v-card-text>
 					<v-card-actions>
 						<v-spacer />
-						<v-btn color="primary" :disabled="$validator.errors.any() || !this.isComplete" class="px-3">Submit</v-btn>
+						<v-btn color="primary" :disabled="$validator.errors.any() || !this.isComplete" @click="submit" class="px-3">Submit</v-btn>
 					</v-card-actions>
 				</v-card>
 			</v-col>
@@ -47,7 +49,7 @@
 </template>
 <script>
 import { Validator } from 'vee-validate'
-import axios from 'axios'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 
 export default {
 	name: 'register',
@@ -61,11 +63,13 @@ export default {
 			showPassword: false,
 			showConPassword: false,
 			password: '',
-			confirm_password: ''
+			confirm_password: '',
+			name: this.first_name + ' ' + this.last_name
 		}
 	},
 
 	computed: {
+		...mapGetters(['getRequestStatus', 'getGlobalMessage']),
 		isComplete() {
 			return this.first_name && this.last_name && this.email && this.password && this.confirm_password
 		}
@@ -79,6 +83,8 @@ export default {
 		})
 	},
 	methods: {
+		...mapActions(['auth_register']),
+		...mapMutations(['setGlobalMessage']),
 		isUnique: function (value) {
 			return this.$axios.post('common/checkEmail', {email: value})
 				.then(response => {
@@ -94,6 +100,16 @@ export default {
 						}
 					}
 				})
+		},
+		submit: function () {
+			const { username, email, name, password, confirm_password } = this
+			this.auth_register({
+				username, email, password, confirm_password, name
+			}).then(response => {
+				this.setGlobalMessage(response.data.message + ' ' + 'Check your email')
+			}).catch(error => {
+				console.log(error)
+			})
 		}
 	}
 }
