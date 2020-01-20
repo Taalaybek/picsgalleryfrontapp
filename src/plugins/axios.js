@@ -6,12 +6,15 @@ import axios from "axios";
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
 // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
-// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 let config = {
-  baseURL: process.env.baseURL || process.env.apiUrl || "http://picsgallery.test:8080/api/v1/"
+  baseURL: process.env.baseURL || process.env.apiUrl || "http://picsgallery.test:8080/api/v1/",
   // timeout: 60 * 1000, // Timeout
-  // withCredentials: true, // Check cross-site Access-Control
+  // withCredentials: true, // Check cross-site Access-Control,
+  headers: {
+    'Accept': 'application/json'
+  }
 };
 
 const _axios = axios.create(config);
