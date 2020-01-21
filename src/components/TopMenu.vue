@@ -18,7 +18,7 @@
 					<template v-if="isAuth">
 						<v-btn depressed text class="grey--text text--darken-3">Home</v-btn>
 						<v-btn depressed text class="grey--text text--darken-3">Account</v-btn>
-						<v-btn depressed text class="grey--text text--darken-3">Sign Out</v-btn>
+						<v-btn depressed text @click="logout" class="grey--text text--darken-3">Sign Out</v-btn>
 					</template>
 					<template v-else>
 						<v-btn depressed text to="register" class="pink--text text--lighten-2">Sign Up</v-btn>
@@ -27,21 +27,46 @@
 				</v-toolbar-items>
 			</v-toolbar>
 		</v-app-bar>
+
+		// Logged out snackbar
+		<v-snackbar v-model="snackbar" timeout="1000">
+			{{ globalMessage }}
+			<v-btn color="pink" text @click="snackbar=false">Close</v-btn>
+		</v-snackbar>
 	</v-layout>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
 export default {
 	name: 'top-menu',
 
 	data: () => ({
-		//
+		snackbar: true
 	}),
 
 	computed: {
 		...mapGetters({
-			isAuth: 'checkAuth'
+			isAuth: 'checkAuth',
+			globalMessage: 'getGlobalMessage'
 		})
-	}
+	},
+
+	methods: {
+		...mapMutations(['cleanGlobalMessage']),
+		...mapActions(['auth_logout']),
+		logout: function () {
+			this.auth_logout()
+				.then(response => {
+					this.snackbar = true
+					setTimeout(() => {
+						this.cleanGlobalMessage()
+						this.$router.push('login')
+					}, 2000);
+				})
+				.catch(error => {
+					console.log(error)
+				})
+		}
+	},
 }
 </script>
