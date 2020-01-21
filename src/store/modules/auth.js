@@ -22,7 +22,7 @@ const auth = {
 				state.isAuthenticated = true
 			}
 
-			state.isAuthenticated = true
+			state.isAuthenticated = false
 		}
 	},
 
