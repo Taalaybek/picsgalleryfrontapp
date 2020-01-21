@@ -17,6 +17,9 @@ export default new Vuex.Store({
     },
     setGlobalMessage (state, message) {
       state.globalMessage = message
+    },
+    cleanGlobalMessage(state) {
+      state.globalMessage = ''
     }
   },
   actions: {
