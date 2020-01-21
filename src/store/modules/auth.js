@@ -50,10 +50,8 @@ const auth = {
 
 					context.commit('setRequestStatus', false)
 					Vue.$cookies.set('token_type', response.data.token_type)
-					Vue.$cookies.set('access_token', response.data.access_token)
-					Vue.$cookies.set('refresh_token', response.data.refresh_token)
-					Vue.$cookies.set('expires_in', response.data.expires_in)
-					Vue.$cookies.set('token', response.data.token_type+' '+response.data.access_token)
+					Vue.$cookies.set('access_token', response.data.access_token, response.data.expires_in / 60)
+					Vue.$cookies.set('refresh_token', response.data.refresh_token, response.data.expires_in / 60)
 					context.commit('auth_detectViaCookies')
 
 					return resolve(response)
@@ -68,7 +66,7 @@ const auth = {
 		auth_logout (context) {
 			context.commit('setRequestStatus', true)
 			return new Promise((resolve, reject) => {
-				window.axios.get('auth/logout', { headers: { 'Authorization': Vue.$cookies.get('token') }})
+				window.axios.get('auth/logout', { headers: { 'Authorization': `${Vue.$cookies.get('token_type')} ${Vue.$cookies.get('access_token')}` }})
 					.then(response => {
 						context.commit('setRequestStatus', false)
 						context.commit('setGlobalMessage', response.data.message)
@@ -94,11 +92,9 @@ const auth = {
 		},
 
 		auth_cleanCookies () {
-			Vue.$cookies.remove('token')
 			Vue.$cookies.remove('token_type')
 			Vue.$cookies.remove('access_token')
 			Vue.$cookies.remove('refresh_token')
-			Vue.$cookies.remove('expires_in')
 		}
 	}
 }
