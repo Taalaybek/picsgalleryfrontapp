@@ -20,9 +20,9 @@ const auth = {
 		auth_detectViaCookies (state) {
 			if (Vue.$cookies.isKey('access_token') && Vue.$cookies.get('access_token')) {
 				state.isAuthenticated = true
+			} else {
+				state.isAuthenticated = false
 			}
-
-			state.isAuthenticated = false
 		}
 	},
 
