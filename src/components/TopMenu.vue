@@ -1,7 +1,7 @@
 <template>
 	<v-layout>
 		<v-app-bar app absolute light fixed hide-on-scroll>
-			<v-btn icon large>
+			<v-btn icon large to="/">
 				<v-avatar size="32px" tile item>
 					<v-img src="@/assets/images/favicon-32x32.png" />
 				</v-avatar>
@@ -22,7 +22,7 @@
 					</template>
 					<template v-else>
 						<v-btn depressed text to="register" class="pink--text text--lighten-2">Sign Up</v-btn>
-						<v-btn depressed text class="indigo--text text--darken-1">Sign In</v-btn>
+						<v-btn depressed text to="login" class="indigo--text text--darken-1">Sign In</v-btn>
 					</template>
 				</v-toolbar-items>
 			</v-toolbar>
