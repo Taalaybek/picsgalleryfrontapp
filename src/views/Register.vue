@@ -3,13 +3,12 @@
 		<v-row align="start" justify="center">
 			<v-col cols="12" sm="8" md="4">
 				<v-alert v-show="getGlobalMessage" type="success" transition="scale-transition" dense dismissible>{{ getGlobalMessage }}</v-alert>
-				<v-card elevation="5" loader-height="10">
+				<v-card elevation="5">
 					<v-progress-linear color="teal" :active="getRequestStatus" height="8" :indeterminate="getRequestStatus" bottom></v-progress-linear>
 					<v-toolbar
 					color="primary"
-					flat
-					dark>
-						<v-toolbar-title>Register form</v-toolbar-title>
+					flat>
+						<v-toolbar-title class="white--text">Register form</v-toolbar-title>
 					</v-toolbar>
 					<v-card-text>
 						<v-form>
@@ -84,7 +83,7 @@ export default {
 	},
 	methods: {
 		...mapActions(['auth_register']),
-		...mapMutations(['setGlobalMessage']),
+		...mapMutations(['setGlobalMessage', 'cleanGlobalMessage']),
 		isUnique: function (value) {
 			return this.$axios.post('common/checkEmail', {email: value})
 				.then(response => {
