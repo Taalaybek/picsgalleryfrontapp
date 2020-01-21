@@ -29,7 +29,7 @@
 		</v-app-bar>
 
 		// Logged out snackbar
-		<v-snackbar v-model="snackbar" timeout="1000">
+		<v-snackbar v-model="snackbar" :timeout="timeout">
 			{{ globalMessage }}
 			<v-btn color="pink" text @click="snackbar=false">Close</v-btn>
 		</v-snackbar>
@@ -41,7 +41,8 @@ export default {
 	name: 'top-menu',
 
 	data: () => ({
-		snackbar: true
+		snackbar: false,
+		timeout: 1000
 	}),
 
 	computed: {
