@@ -1,5 +1,5 @@
 <template>
-	<v-layout>
+	<div>
 		<v-app-bar app absolute light fixed hide-on-scroll>
 			<v-btn icon large to="/">
 				<v-avatar size="32px" tile item>
@@ -33,7 +33,7 @@
 			{{ globalMessage }}
 			<v-btn color="pink" text @click="snackbar=false">Close</v-btn>
 		</v-snackbar>
-	</v-layout>
+	</div>
 </template>
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex'
