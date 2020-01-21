@@ -16,7 +16,7 @@
 					<v-btn depressed text class="grey--text text--darken-3">Users</v-btn>
 
 					<template v-if="isAuth">
-						<v-btn depressed text class="grey--text text--darken-3">Home</v-btn>
+						<v-btn depressed text to="/home" class="grey--text text--darken-3">Home</v-btn>
 						<v-btn depressed text class="grey--text text--darken-3">Account</v-btn>
 						<v-btn depressed text @click="logout" class="grey--text text--darken-3">Sign Out</v-btn>
 					</template>
@@ -28,7 +28,7 @@
 			</v-toolbar>
 		</v-app-bar>
 
-		// Logged out snackbar
+		<!-- Logged out snackbar -->
 		<v-snackbar v-model="snackbar" :timeout="timeout">
 			{{ globalMessage }}
 			<v-btn color="pink" text @click="snackbar=false">Close</v-btn>
