@@ -29,28 +29,28 @@ const auth = {
 
 	actions: {
 		auth_register (context, data) {
-			context.commit('setRequestStatus', true)
+			context.commit('requestTrue')
 			return new Promise(function (resolve, reject) {
 				window.axios.post('auth/register', data)
 					.then(response => {
-						context.commit('setRequestStatus', false)
+						context.commit('requestFalse')
 						Vue.$notify.set({content: `${response.data.message} Check yout email`, color: 'success'})
 						return resolve(response)
 					})
 					.catch(error => {
-						context.commit('setRequestStatus', false)
+						context.commit('requestFalse')
 						return reject(error)
 					})
 			})
 		},
 
 		auth_login (context, data) {
-			context.commit('setRequestStatus', true)
+			context.commit('requestTrue')
 			return new Promise((resolve, reject) => {
 				window.axios.post('auth/login', data)
 				.then(response => {
 
-					context.commit('setRequestStatus', false)
+					context.commit('requestFalse')
 					Vue.$cookies.set('token_type', response.data.token_type)
 					Vue.$cookies.set('access_token', response.data.access_token, response.data.expires_in / 60)
 					Vue.$cookies.set('refresh_token', response.data.refresh_token, response.data.expires_in / 60)
@@ -59,7 +59,7 @@ const auth = {
 					return resolve(response)
 				})
 				.catch(error => {
-					context.commit('setRequestStatus', false)
+					context.commit('requestFalse')
 					if (error.response.status === 401) {
 						Vue.$notify.set({content: error.response.data.message, color: 'error'})
 					}
@@ -73,18 +73,18 @@ const auth = {
 		},
 
 		auth_logout (context) {
-			context.commit('setRequestStatus', true)
+			context.commit('overlayTrue')
 			return new Promise((resolve, reject) => {
 				window.axios.get('auth/logout', { headers: { 'Authorization': `${Vue.$cookies.get('token_type')} ${Vue.$cookies.get('access_token')}` }})
 					.then(response => {
-						context.commit('setRequestStatus', false)
+						context.commit('overlayFalse')
 						context.commit('auth_error')
 						context.dispatch('auth_cleanCookies')
 						Vue.$notify.set({content: response.data.message, color: 'success'})
 						return resolve(response)
 					})
 					.catch(error => {
-						context.commit('setRequestStatus', false)
+						context.commit('overlayFalse')
 						if (error.response.status == 401) {
 							context.commit('auth_error')
 							context.dispatch('auth_cleanCookies')

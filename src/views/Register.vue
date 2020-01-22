@@ -3,7 +3,7 @@
 		<v-row align="start" justify="center">
 			<v-col cols="12" sm="8" md="4">
 				<v-card elevation="5">
-					<v-progress-linear color="teal" :active="getRequestStatus" height="8" :indeterminate="getRequestStatus" bottom></v-progress-linear>
+					<v-progress-linear color="teal" :active="getRequest" height="8" :indeterminate="getRequest" bottom></v-progress-linear>
 					<v-toolbar
 					color="primary"
 					flat>
@@ -66,7 +66,7 @@ export default {
 	},
 
 	computed: {
-		...mapGetters(['getRequestStatus']),
+		...mapGetters(['getRequest']),
 		isComplete() {
 			return this.first_name && this.last_name && this.email && this.password && this.confirm_password
 		},

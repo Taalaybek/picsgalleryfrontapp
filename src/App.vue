@@ -3,6 +3,9 @@
     <top-menu></top-menu>
     <v-content>
       <v-container class="fill-height" fluid>
+        <v-overlay :value="overlay" absolute light z-index="5">
+          <v-progress-circular indeterminate color="primary" :value="20"></v-progress-circular>
+        </v-overlay>
         <router-view></router-view>
       </v-container>
     </v-content>
@@ -12,6 +15,7 @@
 
 <script>
 import TopMenu from '@/components/TopMenu'
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'App',
@@ -26,6 +30,10 @@ export default {
 
   created(){
     
+  },
+
+  computed: {
+    ...mapGetters(['overlay'])
   } 
 };
 </script>
