@@ -10,15 +10,19 @@ import auth from './modules/auth'
 
 export default new Vuex.Store({
   state: {
-    requestStatus: false,
+    request: false,
+    overlay: false,
     notify: {
       color: '',
       content: ''
     }
   },
   mutations: {
-    setRequestStatus (state, bool) {
-      state.requestStatus = bool
+    requestTrue (state) {
+      state.request = true
+    },
+    requestFalse (state) {
+      state.request = false
     },
     setNotifyData(state, payload) {
       state.notify.color = payload.color
@@ -27,13 +31,20 @@ export default new Vuex.Store({
     clearNotification(state) {
       state.notify.color = ''
       state.notify.content = ''
+    },
+    overlayTrue(state) {
+      state.overlay = true
+    },
+    overlayFalse(state) {
+      state.overlay = false
     }
   },
   actions: {
   },
   getters: {
-    getRequestStatus: state => state.requestStatus,
-    getNotify: state => state.notify
+    getRequest: state => state.request,
+    getNotify: state => state.notify,
+    overlay: state => state.overlay
   },
   modules: {
     auth: auth
