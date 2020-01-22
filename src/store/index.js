@@ -11,24 +11,29 @@ import auth from './modules/auth'
 export default new Vuex.Store({
   state: {
     requestStatus: false,
-    globalMessage: ''
+    notify: {
+      color: '',
+      content: ''
+    }
   },
   mutations: {
     setRequestStatus (state, bool) {
       state.requestStatus = bool
     },
-    setGlobalMessage (state, message) {
-      state.globalMessage = message
+    setNotifyData(state, payload) {
+      state.notify.color = payload.color
+      state.notify.content = payload.content
     },
-    cleanGlobalMessage(state) {
-      state.globalMessage = ''
+    clearNotification(state) {
+      state.notify.color = ''
+      state.notify.content = ''
     }
   },
   actions: {
   },
   getters: {
     getRequestStatus: state => state.requestStatus,
-    getGlobalMessage: state => state.globalMessage
+    getNotify: state => state.notify
   },
   modules: {
     auth: auth
