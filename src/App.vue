@@ -6,11 +6,13 @@
         <router-view></router-view>
       </v-container>
     </v-content>
+    <v-notify></v-notify>
   </v-app>
 </template>
 
 <script>
 import TopMenu from '@/components/TopMenu'
+
 export default {
   name: 'App',
 
@@ -20,6 +22,10 @@ export default {
 
   data: () => ({
     //
-  })
+  }),
+
+  created(){
+    
+  } 
 };
 </script>
