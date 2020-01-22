@@ -10,7 +10,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 let config = {
   baseURL: process.env.baseURL || process.env.apiUrl || "http://picsgallery.test:8080/api/v1/",
-  // timeout: 60 * 1000, // Timeout
+  timeout: 60 * 1000, // Timeout
   // withCredentials: true, // Check cross-site Access-Control,
   headers: {
     'Accept': 'application/json'
