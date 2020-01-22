@@ -1,13 +1,18 @@
-import Vue from 'vue'
 import store from '@/store/index'
 
 const Notify = {
 	install: function (Vue, options) {
-		Vue.component('v-notify', ()=>import('@/components/Notify'))
 		
-		Vue.prototype.$notify = (options) => {
-			store.commit('setNotifyData', options)
-		}
+		Vue.prototype.$notify = this
+		Vue.$notify = this
+		
+		Vue.component('v-notify', ()=>import('@/components/Notify'))
+	},
+
+	set: function (options) {
+		store.commit('setNotifyData', options)
+
+		return this;
 	}
 }
 export default Notify

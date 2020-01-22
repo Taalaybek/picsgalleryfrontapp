@@ -15,7 +15,7 @@
 					<v-btn depressed text class="grey--text text--darken-3">Albums</v-btn>
 					<v-btn depressed text class="grey--text text--darken-3">Users</v-btn>
 
-					<template v-if="isAuth">
+					<template v-if="checkAuth">
 						<v-btn depressed text to="/home" class="grey--text text--darken-3">Home</v-btn>
 						<v-btn depressed text class="grey--text text--darken-3">Account</v-btn>
 						<v-btn depressed text @click="logout" class="grey--text text--darken-3">Sign Out</v-btn>
@@ -27,12 +27,6 @@
 				</v-toolbar-items>
 			</v-toolbar>
 		</v-app-bar>
-
-		<!-- Logged out snackbar -->
-		<v-snackbar v-model="snackbar" :timeout="timeout">
-			{{ globalMessage }}
-			<v-btn color="pink" text @click="snackbar=false">Close</v-btn>
-		</v-snackbar>
 	</div>
 </template>
 <script>
@@ -46,26 +40,16 @@ export default {
 	}),
 
 	computed: {
-		...mapGetters({
-			isAuth: 'checkAuth',
-			globalMessage: 'getGlobalMessage'
-		})
+		...mapGetters(['checkAuth'])
 	},
 
 	methods: {
-		...mapMutations(['cleanGlobalMessage']),
+		...mapMutations(['clearNotification']),
 		...mapActions(['auth_logout']),
 		logout: function () {
 			this.auth_logout()
 				.then(response => {
-					this.snackbar = true
-					setTimeout(() => {
-						this.cleanGlobalMessage()
-						this.$router.push('login')
-					}, 2000);
-				})
-				.catch(error => {
-					console.log(error)
+					this.$router.push('login')
 				})
 		}
 	},

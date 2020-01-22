@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import router from '@/router/index'
 
 const auth = {
 	state: {
@@ -33,6 +34,7 @@ const auth = {
 				window.axios.post('auth/register', data)
 					.then(response => {
 						context.commit('setRequestStatus', false)
+						Vue.$notify.set({content: `${response.data.message} Check yout email`, color: 'success'})
 						return resolve(response)
 					})
 					.catch(error => {
@@ -58,6 +60,13 @@ const auth = {
 				})
 				.catch(error => {
 					context.commit('setRequestStatus', false)
+					if (error.response.status === 401) {
+						Vue.$notify.set({content: error.response.data.message, color: 'error'})
+					}
+
+					if (error.response.status === 500) {
+						Vue.$notify.set({content: 'The server is not responding', color: 'error'})
+					}
 					return reject(error)
 				})
 			})
@@ -69,9 +78,9 @@ const auth = {
 				window.axios.get('auth/logout', { headers: { 'Authorization': `${Vue.$cookies.get('token_type')} ${Vue.$cookies.get('access_token')}` }})
 					.then(response => {
 						context.commit('setRequestStatus', false)
-						context.commit('setGlobalMessage', response.data.message)
 						context.commit('auth_error')
 						context.dispatch('auth_cleanCookies')
+						Vue.$notify.set({content: response.data.message, color: 'success'})
 						return resolve(response)
 					})
 					.catch(error => {
@@ -79,11 +88,12 @@ const auth = {
 						if (error.response.status == 401) {
 							context.commit('auth_error')
 							context.dispatch('auth_cleanCookies')
-							context.commit('setGlobalMessage', 'Invalid access token')
+							Vue.$notify.set({content: 'Invalid access token', color: 'error'})
+							router.push('/login')
 						}
 
 						if (error.response.status == 500) {
-							context.commit('setGlobalMessage', 'Server shut down')
+							Vue.$notify.set({content: 'The server is not responding', color: 'error'})
 						}
 
 						return reject(error)

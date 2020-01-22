@@ -2,7 +2,6 @@
 	<v-layout>
 		<v-row align="start" justify="center">
 			<v-col cols="12" sm="8" md="4">
-				<v-alert v-show="getGlobalMessage" type="info" class="white--text" transition="scale-transition" dense dismissible>{{ getGlobalMessage }}</v-alert>
 				<v-card elevation="5">
 					<v-progress-linear color="teal" :active="getRequestStatus" height="8" :indeterminate="getRequestStatus" bottom></v-progress-linear>
 
@@ -49,7 +48,7 @@ export default {
 	},
 
 	computed: {
-		...mapGetters(['getRequestStatus', 'getGlobalMessage']),
+		...mapGetters(['getRequestStatus']),
 		isComplete() {
 			return this.username && this.password
 		}
@@ -57,25 +56,15 @@ export default {
 
 	methods: {
 		...mapActions(['auth_login']),
-		...mapMutations(['setGlobalMessage', 'cleanGlobalMessage']),
 		submit: function () {
 			const { username, password } = this
 			this.auth_login({ username, password })
 				.then(response => {
-					this.setGlobalMessage('Successfull login')
-					setTimeout(() => {
-						this.cleanGlobalMessage()
-						this.$router.push('/')
-					}, 3000);
-				})
-				.catch(error => {
-					if (error.response.status == 401) {
-						this.setGlobalMessage(error.response.data.message)
-					}
+					this.$notify.set({content: 'Successfull login', color: 'success'})
 
 					setTimeout(() => {
-						this.cleanGlobalMessage()
-					}, 5000); 
+						this.$router.push('/home')
+					}, 2000);
 				})
 		}
 	},
