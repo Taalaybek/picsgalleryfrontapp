@@ -2,7 +2,6 @@
 	<v-layout>
 		<v-row align="start" justify="center">
 			<v-col cols="12" sm="8" md="4">
-				<v-alert v-show="getGlobalMessage" type="success" transition="scale-transition" dense dismissible>{{ getGlobalMessage }}</v-alert>
 				<v-card elevation="5">
 					<v-progress-linear color="teal" :active="getRequestStatus" height="8" :indeterminate="getRequestStatus" bottom></v-progress-linear>
 					<v-toolbar
@@ -62,15 +61,17 @@ export default {
 			showPassword: false,
 			showConPassword: false,
 			password: '',
-			confirm_password: '',
-			name: this.first_name + ' ' + this.last_name
+			confirm_password: ''
 		}
 	},
 
 	computed: {
-		...mapGetters(['getRequestStatus', 'getGlobalMessage']),
+		...mapGetters(['getRequestStatus']),
 		isComplete() {
 			return this.first_name && this.last_name && this.email && this.password && this.confirm_password
+		},
+		name() {
+			return this.first_name + ' ' + this.last_name
 		}
 	},
 
@@ -83,7 +84,6 @@ export default {
 	},
 	methods: {
 		...mapActions(['auth_register']),
-		...mapMutations(['setGlobalMessage', 'cleanGlobalMessage']),
 		isUnique: function (value) {
 			return this.$axios.post('common/checkEmail', {email: value})
 				.then(response => {
@@ -104,10 +104,6 @@ export default {
 			const { username, email, name, password, confirm_password } = this
 			this.auth_register({
 				username, email, password, confirm_password, name
-			}).then(response => {
-				this.setGlobalMessage(response.data.message + ' ' + 'Check your email')
-			}).catch(error => {
-				console.log(error)
 			})
 		}
 	}
