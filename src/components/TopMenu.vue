@@ -53,5 +53,8 @@ export default {
 				})
 		}
 	},
+	created() {
+		this.$store.commit('auth_detectViaCookies')
+	}
 }
 </script>
