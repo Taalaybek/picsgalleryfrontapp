@@ -41,6 +41,10 @@ const routes = [
         auth
       ]
     }
+  },
+  {
+    path: '*',
+    component: ()=>import('@/views/Error404')
   }
 ]
 
