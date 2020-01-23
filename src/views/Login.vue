@@ -13,13 +13,13 @@
 						<v-form>
 							<v-text-field v-model="username" label="Username or Email" type="text" name="username" 
 							dense counter="60" append-outer-icon="mdi-account" v-validate="'required|min:6|max:60'" 
-							:error-messages="errors.has('username')?errors.first('username'):''" outlined required clearable></v-text-field>
+							:error-messages="errors.has('username')?errors.first('username'):''" outlined required v-on:keyup.enter.shift="handleShiftEnter" clearable></v-text-field>
 
 							<v-text-field v-model="password" label="Password" :type="showPassword?'text':'password'" 
 							name="password" :append-icon="showPassword?'mdi-eye-off':'mdi-eye'" dense counter="20" 
 							append-outer-icon="mdi-textbox-password" v-validate="'required|min:8|max:30'" 
 							:error-messages="errors.has('password')?errors.first('password'):''" @click:append="showPassword = !showPassword" 
-							outlined required clearable></v-text-field>
+							outlined required v-on:keyup.enter.shift="handleShiftEnter" clearable></v-text-field>
 						</v-form>
 					</v-card-text>
 
@@ -66,7 +66,14 @@ export default {
 						this.$router.push('/home')
 					}, 2000);
 				})
+		},
+		handleShiftEnter: function () {
+			if (!this.$validator.errors.any()) {
+				this.submit()
+			} else {
+				this.$notify.set({content: 'Please, enter valid data', color: 'error'})
+			}
 		}
-	},
+	}
 }
 </script>
