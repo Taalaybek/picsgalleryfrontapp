@@ -7,6 +7,7 @@ Vue.use(Vuex)
 
 /*** MODULE IMPORTING ***/
 import auth from './modules/auth'
+import user from './modules/user'
 
 export default new Vuex.Store({
   state: {
@@ -47,7 +48,8 @@ export default new Vuex.Store({
     overlay: state => state.overlay
   },
   modules: {
-    auth: auth
+    auth: auth,
+    user: user
   },
   plugins: [createPersistedState({
     storage: {
