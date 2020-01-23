@@ -56,6 +56,8 @@ const auth = {
 					Vue.$cookies.set('refresh_token', response.data.refresh_token, response.data.expires_in / 60)
 					context.commit('auth_detectViaCookies')
 
+					context.dispatch('fetchUserData')
+
 					return resolve(response)
 				})
 				.catch(error => {
