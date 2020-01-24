@@ -32,15 +32,12 @@ const auth = {
 			context.commit('requestTrue')
 			return new Promise(function (resolve, reject) {
 				window.axios.post('auth/register', data)
+					.finally(_=> context.commit('requestFalse'))
 					.then(response => {
-						context.commit('requestFalse')
 						Vue.$notify.set({content: `${response.data.message} Check yout email`, color: 'success'})
 						return resolve(response)
 					})
-					.catch(error => {
-						context.commit('requestFalse')
-						return reject(error)
-					})
+					.catch(error => reject(error))
 			})
 		},
 
@@ -48,28 +45,27 @@ const auth = {
 			context.commit('requestTrue')
 			return new Promise((resolve, reject) => {
 				window.axios.post('auth/login', data)
-				.then(response => {
-
-					context.commit('requestFalse')
-					Vue.$cookies.set('token_type', response.data.token_type)
-					Vue.$cookies.set('access_token', response.data.access_token, response.data.expires_in / 60)
-					Vue.$cookies.set('refresh_token', response.data.refresh_token, response.data.expires_in / 60)
+				.finally(() => context.commit('requestFalse'))
+				.then(({data})=> {
+					console.log(data)
+					Vue.$cookies.set('token_type', data.token_type)
+					Vue.$cookies.set('access_token', data.access_token, data.expires_in / 60)
+					Vue.$cookies.set('refresh_token', data.refresh_token, data.expires_in / 60)
 					context.commit('auth_detectViaCookies')
 
 					context.dispatch('fetchUserData')
 
-					return resolve(response)
+					return resolve(data)
 				})
-				.catch(error => {
-					context.commit('requestFalse')
-					if (error.response.status === 401) {
-						Vue.$notify.set({content: error.response.data.message, color: 'error'})
+				.catch(({response}) => {
+					if (response.status === 401) {
+						Vue.$notify.set({content: response.data.message, color: 'error'})
 					}
 
-					if (error.response.status === 500) {
+					if (response.status === 500) {
 						Vue.$notify.set({content: 'The server is not responding', color: 'error'})
 					}
-					return reject(error)
+					return reject(response)
 				})
 			})
 		},
@@ -78,15 +74,14 @@ const auth = {
 			context.commit('overlayTrue')
 			return new Promise((resolve, reject) => {
 				window.axios.get('auth/logout', { headers: { 'Authorization': `${Vue.$cookies.get('token_type')} ${Vue.$cookies.get('access_token')}` }})
+					.finally(_ => context.commit('overlayFalse'))
 					.then(response => {
-						context.commit('overlayFalse')
 						context.commit('auth_error')
 						context.dispatch('auth_cleanCookies')
 						Vue.$notify.set({content: response.data.message, color: 'success'})
 						return resolve(response)
 					})
 					.catch(error => {
-						context.commit('overlayFalse')
 						if (error.response.status == 401) {
 							context.commit('auth_error')
 							context.dispatch('auth_cleanCookies')
