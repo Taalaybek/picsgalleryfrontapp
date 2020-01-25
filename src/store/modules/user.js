@@ -28,21 +28,13 @@ const user = {
 			context.commit('overlayTrue')
 			return new Promise((resolve, reject) => {
 				window.axios.get('auth/user')
+					.finally(_ => context.commit('overlayFalse'))
 					.then(response => {
-						context.commit('overlayFalse')
 						context.commit('setUser', response.data)
 						context.commit('setAttributes', response.data.attributes)
 						return resolve(response)
 					})
 					.catch(error => {
-						context.commit('overlayFalse')
-						if (error.response.status == 401) {
-							context.commit('auth_error')
-							TokenService.cleanTokens()
-							Vue.$notify.set({content: error.response.data.message, color: 'error'})
-							router.push('/login')
-						}
-
 						if (error.response.status == 500) {
 							Vue.$notify.set({content: UNDEFINED_ERROR, color: 'error'})
 						}
