@@ -54,7 +54,7 @@ export default {
 		}
 	},
 	created() {
-		this.$store.commit('auth_detectViaCookies')
+		this.$store.dispatch('checkAuthorization')
 	}
 }
 </script>

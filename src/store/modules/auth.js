@@ -19,9 +19,6 @@ const auth = {
 
 		auth_error (state) {
 			state.isAuthenticated = false
-		},
-		auth_detectViaCookies (state) {
-			state.isAuthenticated = TokenService.isAuthenticated() ? true: false
 		}
 	},
 
@@ -39,7 +36,7 @@ const auth = {
 			})
 		},
 
-		auth_login (context, data) {
+		login (context, data) {
 			context.commit('requestTrue')
 			return new Promise((resolve, reject) => {
 				window.axios.post('auth/login', data)

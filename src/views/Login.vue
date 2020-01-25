@@ -56,10 +56,10 @@ export default {
 	},
 
 	methods: {
-		...mapActions(['auth_login']),
+		...mapActions(['login']),
 		submit: function () {
 			const { username, password } = this
-			this.auth_login({ username, password })
+			this.login({ username, password })
 				.then(response => {
 					this.$notify.set({content: SUCCESS_LOGIN, color: 'success'})
 
