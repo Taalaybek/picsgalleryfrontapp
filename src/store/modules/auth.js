@@ -40,9 +40,10 @@ const auth = {
 			context.commit('requestTrue')
 			return new Promise((resolve, reject) => {
 				window.axios.post('auth/login', data)
-				.finally(() => context.commit('requestFalse'))
+				.finally(_ => context.commit('requestFalse'))
 				.then(({data})=> {
 					TokenService.setFullAuthorization(data).setHeaders()
+					context.dispatch('checkAuthorization')
 					return resolve(true)
 				})
 				.then(response => {
@@ -64,7 +65,6 @@ const auth = {
 
 		logout (context) {
 			context.commit('overlayTrue')
-			context.dispatch('checkAuthorization')
 			return new Promise((resolve, reject) => {
 				window.axios.get('auth/logout')
 					.finally(_ => context.commit('overlayFalse'))
@@ -75,18 +75,9 @@ const auth = {
 						return resolve(response)
 					})
 					.catch(error => {
-						if (error.response.status == 401) {
-							context.commit('auth_error')
-							TokenService.cleanTokens()
-							Vue.$notify.set({content: INVALID_TOKEN, color: 'error'})
-							router.push('/login')
-						}
-
 						if (error.response.status == 500) {
 							Vue.$notify.set({content: UNDEFINED_ERROR, color: 'error'})
 						}
-
-						return reject(error)
 					})
 			})
 		},
@@ -99,6 +90,26 @@ const auth = {
 				TokenService.cleanTokens()
 				context.commit('auth_error')
 			}
+		},
+
+		refreshToken(context) {
+			Vue.$notify.set({content: 'Updating access token ...', color: 'info'})
+			return new Promise((resolve, reject) => {
+				const refresh_token = TokenService.getRefreshToken()
+				window.axios.post('auth/token_refresh', {refresh_token})
+					.then(({data}) => {
+						TokenService.setFullAuthorization(data).setHeaders()
+						context.dispatch('checkAuthorization')
+						return resolve(true)
+					})
+					.catch(({response}) => {
+						if (response.status == 401) {
+							Vue.$notify.set({content: response.data.message, color: 'error'})
+							TokenService.cleanTokens()
+							router.push('/login')
+						}
+					})
+			})
 		}
 	}
 }
