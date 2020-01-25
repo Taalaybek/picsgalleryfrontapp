@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import router from '@/router/index'
+import TokenService from '@/services/TokenService'
+import { UNDEFINED_ERROR, INVALID_TOKEN } from '@/services/constants'
 
 const auth = {
 	state: {
@@ -19,11 +21,7 @@ const auth = {
 			state.isAuthenticated = false
 		},
 		auth_detectViaCookies (state) {
-			if (Vue.$cookies.isKey('access_token') && Vue.$cookies.get('access_token')) {
-				state.isAuthenticated = true
-			} else {
-				state.isAuthenticated = false
-			}
+			state.isAuthenticated = TokenService.isAuthenticated() ? true: false
 		}
 	},
 
@@ -47,15 +45,12 @@ const auth = {
 				window.axios.post('auth/login', data)
 				.finally(() => context.commit('requestFalse'))
 				.then(({data})=> {
-					console.log(data)
-					Vue.$cookies.set('token_type', data.token_type)
-					Vue.$cookies.set('access_token', data.access_token, data.expires_in / 60)
-					Vue.$cookies.set('refresh_token', data.refresh_token, data.expires_in / 60)
-					context.commit('auth_detectViaCookies')
-
+					TokenService.setFullAuthorization(data).setHeaders()
+					return resolve(true)
+				})
+				.then(response => {
 					context.dispatch('fetchUserData')
-
-					return resolve(data)
+					return resolve(response)
 				})
 				.catch(({response}) => {
 					if (response.status === 401) {
@@ -63,7 +58,7 @@ const auth = {
 					}
 
 					if (response.status === 500) {
-						Vue.$notify.set({content: 'The server is not responding', color: 'error'})
+						Vue.$notify.set({content: UNDEFINED_ERROR, color: 'error'})
 					}
 					return reject(response)
 				})
@@ -72,25 +67,26 @@ const auth = {
 
 		auth_logout (context) {
 			context.commit('overlayTrue')
+			context.dispatch('checkAuthorization')
 			return new Promise((resolve, reject) => {
-				window.axios.get('auth/logout', { headers: { 'Authorization': `${Vue.$cookies.get('token_type')} ${Vue.$cookies.get('access_token')}` }})
+				window.axios.get('auth/logout')
 					.finally(_ => context.commit('overlayFalse'))
 					.then(response => {
 						context.commit('auth_error')
-						context.dispatch('auth_cleanCookies')
+						TokenService.cleanTokens()
 						Vue.$notify.set({content: response.data.message, color: 'success'})
 						return resolve(response)
 					})
 					.catch(error => {
 						if (error.response.status == 401) {
 							context.commit('auth_error')
-							context.dispatch('auth_cleanCookies')
-							Vue.$notify.set({content: 'Invalid access token', color: 'error'})
+							TokenService.cleanTokens()
+							Vue.$notify.set({content: INVALID_TOKEN, color: 'error'})
 							router.push('/login')
 						}
 
 						if (error.response.status == 500) {
-							Vue.$notify.set({content: 'The server is not responding', color: 'error'})
+							Vue.$notify.set({content: UNDEFINED_ERROR, color: 'error'})
 						}
 
 						return reject(error)
@@ -98,10 +94,14 @@ const auth = {
 			})
 		},
 
-		auth_cleanCookies () {
-			Vue.$cookies.remove('token_type')
-			Vue.$cookies.remove('access_token')
-			Vue.$cookies.remove('refresh_token')
+		checkAuthorization(context) {
+			if (TokenService.isAuthenticated()) {
+				TokenService.setHeaders()
+				context.commit('auth_success')
+			} else {
+				TokenService.cleanTokens()
+				context.commit('auth_error')
+			}
 		}
 	}
 }
