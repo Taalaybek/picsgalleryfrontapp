@@ -18,7 +18,7 @@
 					<template v-if="checkAuth">
 						<v-btn depressed text to="/home" class="grey--text text--darken-3">Home</v-btn>
 						<v-btn depressed text class="grey--text text--darken-3">Account</v-btn>
-						<v-btn depressed text @click="logout" class="grey--text text--darken-3">Sign Out</v-btn>
+						<v-btn depressed text @click="submit" class="grey--text text--darken-3">Sign Out</v-btn>
 					</template>
 					<template v-else>
 						<v-btn depressed text to="register" class="pink--text text--lighten-2">Sign Up</v-btn>
@@ -45,9 +45,9 @@ export default {
 
 	methods: {
 		...mapMutations(['clearNotification']),
-		...mapActions(['auth_logout']),
-		logout: function () {
-			this.auth_logout()
+		...mapActions(['logout']),
+		submit: function () {
+			this.logout()
 				.then(response => {
 					this.$router.push('login')
 				})

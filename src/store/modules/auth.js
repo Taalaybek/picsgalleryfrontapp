@@ -62,7 +62,7 @@ const auth = {
 			})
 		},
 
-		auth_logout (context) {
+		logout (context) {
 			context.commit('overlayTrue')
 			context.dispatch('checkAuthorization')
 			return new Promise((resolve, reject) => {
