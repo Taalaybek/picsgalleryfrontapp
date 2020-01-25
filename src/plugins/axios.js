@@ -3,6 +3,8 @@
 import Vue from 'vue';
 import axios from "axios";
 import {API_URL} from '@/services/constants'
+import TokenService from '@/services/TokenService'
+import store from '@/store/index'
 
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
@@ -37,8 +39,22 @@ _axios.interceptors.response.use(
     // Do something with response data
     return response;
   },
-  function(error) {
-    // Do something with response error
+  async function (error) {
+    if (error.response.status == 401) {
+      if (
+        error.response.request.requestURL == `${API_URL}/auth/login` || 
+        error.response.request.requestURL === `${API_URL}/auth/logout`
+      ) {
+        return Promise.reject(error);
+      } else {
+        await store.dispatch('refreshToken')
+        return _axios({
+          method: error.response.config.method,
+          url: error.response.config.url,
+          data: error.response.config.data,
+        })
+      }
+    }
     return Promise.reject(error);
   }
 );
