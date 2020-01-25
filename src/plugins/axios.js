@@ -2,6 +2,7 @@
 
 import Vue from 'vue';
 import axios from "axios";
+import {API_URL} from '@/services/constants'
 
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
@@ -9,7 +10,7 @@ import axios from "axios";
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 let config = {
-  baseURL: process.env.baseURL || process.env.apiUrl || "http://picsgallery.test:8080/api/v1/",
+  baseURL: process.env.baseURL || process.env.apiUrl || API_URL,
   timeout: 60 * 1000, // Timeout
   // withCredentials: true, // Check cross-site Access-Control,
   headers: {
