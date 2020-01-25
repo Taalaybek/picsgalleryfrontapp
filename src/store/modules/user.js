@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import router from '@/router/index'
+import TokenService from '@/services/TokenService'
+import {UNDEFINED_ERROR} from '@/services/constants'
 
 const user = {
 	state: {
@@ -25,24 +27,16 @@ const user = {
 		fetchUserData(context) {
 			context.commit('overlayTrue')
 			return new Promise((resolve, reject) => {
-				window.axios.get('auth/user', { headers: { 'Authorization': `${Vue.$cookies.get('token_type')} ${Vue.$cookies.get('access_token')}`} })
+				window.axios.get('auth/user')
+					.finally(_ => context.commit('overlayFalse'))
 					.then(response => {
-						context.commit('overlayFalse')
 						context.commit('setUser', response.data)
 						context.commit('setAttributes', response.data.attributes)
 						return resolve(response)
 					})
 					.catch(error => {
-						context.commit('overlayFalse')
-						if (error.response.status == 401) {
-							context.commit('auth_error')
-							context.dispatch('auth_cleanCookies')
-							Vue.$notify.set({content: error.response.data.message, color: 'error'})
-							router.push('/login')
-						}
-
 						if (error.response.status == 500) {
-							Vue.$notify.set({content: 'Server shut down', color: 'error'})
+							Vue.$notify.set({content: UNDEFINED_ERROR, color: 'error'})
 						}
 
 						return reject(error)
