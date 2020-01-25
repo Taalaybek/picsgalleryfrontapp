@@ -30,7 +30,7 @@
 	</div>
 </template>
 <script>
-import { mapGetters, mapMutations, mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 export default {
 	name: 'top-menu',
 
@@ -44,8 +44,7 @@ export default {
 	},
 
 	methods: {
-		...mapMutations(['clearNotification']),
-		...mapActions(['logout']),
+		...mapActions(['logout', 'checkAuthorization']),
 		submit: function () {
 			this.logout()
 				.then(response => {
@@ -54,7 +53,7 @@ export default {
 		}
 	},
 	created() {
-		// 
+		this.checkAuthorization()
 	}
 }
 </script>
