@@ -83,7 +83,7 @@ export default {
 		})
 	},
 	methods: {
-		...mapActions(['auth_register']),
+		...mapActions(['register']),
 		isUnique: function (value) {
 			return this.$axios.post('common/checkEmail', {email: value})
 				.then(response => {
@@ -102,7 +102,7 @@ export default {
 		},
 		submit: function () {
 			const { username, email, name, password, confirm_password } = this
-			this.auth_register({
+			this.register({
 				username, email, password, confirm_password, name
 			})
 		}

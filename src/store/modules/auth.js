@@ -23,7 +23,7 @@ const auth = {
 	},
 
 	actions: {
-		auth_register (context, data) {
+		register (context, data) {
 			context.commit('requestTrue')
 			return new Promise(function (resolve, reject) {
 				window.axios.post('auth/register', data)
