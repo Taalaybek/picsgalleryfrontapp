@@ -8,6 +8,8 @@ Vue.use(Vuex)
 /*** MODULE IMPORTING ***/
 import auth from './modules/auth'
 import user from './modules/user'
+import album from './modules/album'
+import photo from './modules/photo'
 
 export default new Vuex.Store({
   state: {
@@ -49,7 +51,9 @@ export default new Vuex.Store({
   },
   modules: {
     auth: auth,
-    user: user
+    user: user,
+    album: album,
+    photo: photo
   },
   plugins: [createPersistedState({
     storage: {
