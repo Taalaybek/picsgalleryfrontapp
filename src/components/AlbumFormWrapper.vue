@@ -10,6 +10,9 @@
 		</v-tooltip>
 
 		<v-dialog v-model="closable" width="600" light>
+			<v-overlay :value="getRequest" light>
+				<v-progress-circular indeterminate color="primary"></v-progress-circular>
+			</v-overlay>
 			<album-create-form 
 			v-bind:dialog="true" 
 			v-bind:title="'Album create form'" 
@@ -41,7 +44,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['checkAuth'])
+    ...mapGetters(['checkAuth', 'getRequest'])
   },
 
   methods: {
