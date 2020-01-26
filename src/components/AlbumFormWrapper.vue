@@ -1,20 +1,24 @@
 <template>
 	<div>
-		<v-btn 
-      color="pink" dark fixed bottom right fab @click="closeDialog()">
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
+		<v-tooltip color="success" left>
+			<template v-slot:activator="{ on }">
+				<v-btn color="pink" dark v-on="on" fixed bottom right fab @click="closeDialog()">
+					<v-icon>mdi-plus</v-icon>
+				</v-btn>
+			</template>
+			<span>Create a new album</span>
+		</v-tooltip>
 
-      <v-dialog v-model="closable" width="600" light>
-        <album-create-form 
-        v-bind:dialog="true" 
-        v-bind:title="'Album create form'" 
-        v-bind:subtitle="'You cant store photo before create album'" 
-        v-bind:btn-title="'Create'"
-        v-bind:with-photo="true"
-        v-on:closeDialog="closeDialog()">
-        </album-create-form>
-      </v-dialog>
+		<v-dialog v-model="closable" width="600" light>
+			<album-create-form 
+			v-bind:dialog="true" 
+			v-bind:title="'Album create form'" 
+			v-bind:subtitle="'You cant store photo before create album'" 
+			v-bind:btn-title="'Create'"
+			v-bind:with-photo="true"
+			v-on:closeDialog="closeDialog()">
+			</album-create-form>
+		</v-dialog>
 	</div>
 </template>
 <script>
