@@ -71,7 +71,7 @@ export default {
 
 	methods: {
 		...mapActions('album', ['createNewAlbum']),
-		...mapActions('photo', ['createNewPhoto']),
+		...mapActions('photo', ['createNewPhotoAfterAlbum']),
 
 		submit() {
 			const albumData = {}
@@ -92,7 +92,7 @@ export default {
 								photoData.append('file_name', this.photo_name)
 							}
 
-							this.createNewPhoto(photoData)
+							this.createNewPhotoAfterAlbum(photoData)
 							.then(res => {
 								this.$notify.set({content: RESOURCE_CREATED, color: 'success'})
 								this.$store.commit('requestFalse')
