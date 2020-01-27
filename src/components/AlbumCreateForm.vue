@@ -21,19 +21,18 @@
 				<!-- photo inputs -->
 				<template v-if="withPhoto">
 					<!-- photo description text input -->
-					<v-text-field name="photo_name" type="text" label="Photo name" v-model="photo_name" 
+					<v-text-field name="photo_name" type="text" label="Photo name" v-model="photo_name" @keypress="nameChanged"
 					v-validate="'min:2|max:40'" :error-messages="errors.has('photo_name')?errors.first('photo_name'):''" outlined clearable></v-text-field>
 
 					<!-- photo file input -->
-					<v-file-input name="photo_file" label="Photo file" v-model="file" accept="image/png, image/jpeg, image/bmp" id="photo_file" class="required-input" 
-					v-validate="'size:10000|image|mimes:image/png,jpeg,bmp'" :error-messages="errors.has('photo_file')?errors.first('photo_file'):''" chips show-size outlined counter append-icon="mdi-asterisk" clearable></v-file-input>
+					<v-file-input name="photo_file" label="Photo file" v-model="file" accept="image/png, image/jpeg, image/bmp" id="photo_file" class="required-input" v-validate="'size:10000|image|mimes:image/png,jpeg,bmp'" :error-messages="errors.has('photo_file')?errors.first('photo_file'):''" chips show-size ref="photo_file" outlined counter append-icon="mdi-asterisk" clearable></v-file-input>
 				</template>
 				<!-- end photo inputs -->
 			</v-card-text>
 			<v-card-actions>
 				<v-spacer></v-spacer>
 				<v-btn text class="grey--text" @click="clearForm">Clear</v-btn>
-				<v-btn color="primary" :disabled="$validator.errors.any()" @click="submit" outlined>{{ btnTitle }}</v-btn>
+				<v-btn color="primary" :disabled="$validator.errors.any() || isComplete()" @click="submit" outlined>{{ btnTitle }}</v-btn>
 			</v-card-actions>
 		</v-card>
 	</v-layout>
@@ -41,6 +40,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import { RESOURCE_CREATED, VALID_DATA } from '@/services/constants'
+import { ErrorBag } from 'vee-validate'
 export default {
 	name: 'album-create-form',
 
@@ -117,8 +117,23 @@ export default {
 			this.photo_name = ''
 			this.file = null
 			this.$validator.reset()
+		},
+
+		isComplete() {
+			return this.album_name.length == 0
+		},
+
+		nameChanged() {
+			if (this.photo_name !== '' && this.photo_name.length > 0 && this.file == null) {
+				this.$validator.errors.add({
+					field: 'photo_file',
+					msg: 'The photo_file field is required'
+				})
+			} else {
+				this.$validator.errors.remove('photo_file')
+			}
 		}
-	},
+	}
 }
 </script>
 <style >
