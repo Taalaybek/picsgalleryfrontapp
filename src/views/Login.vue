@@ -62,10 +62,7 @@ export default {
 			this.login({ username, password })
 				.then(response => {
 					this.$notify.set({content: SUCCESS_LOGIN, color: 'success'})
-
-					setTimeout(() => {
-						this.$router.push('/home')
-					}, 2000);
+					this.$router.push('/home')
 				})
 		},
 		handleShiftEnter: function () {
