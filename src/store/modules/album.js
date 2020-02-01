@@ -4,11 +4,13 @@ import { UNDEFINED_ERROR } from '@/services/constants'
 const album = {
 	namespaced: true,
 	state: {
-	 lastAlbum: {}
+	 lastAlbum: {},
+	 currentUserAlbums: {}
 	},
 
 	getters: {
-		getLastAlbum: state => state.lastAlbum
+		getLastAlbum: state => state.lastAlbum,
+		getCurrentUserAlbums: state => state.currentUserAlbums
 	},
 
 	mutations: {
@@ -17,6 +19,9 @@ const album = {
 		},
 		deleteLastAlbum(state) {
 			state.lastAlbum = {}
+		},
+		setCurrentUserAlbums(state, list) {
+			state.currentUserAlbums = list
 		}
 	},
 
@@ -27,6 +32,21 @@ const album = {
 					.then(response => {
 						context.commit('setNewAlbum', response.data)
 						return resolve(response)
+					})
+					.catch(error => {
+						return reject(error)
+					})
+			})
+		},
+
+		fetchAlbumsOfCurrentUser(context) {
+			context.commit('overlayTrue', null, {root: true})
+			return new Promise((resolve, reject) => {
+				window.axios.get('/albums/authenticatedUserAlbums')
+					.finally(_ => context.commit('overlayFalse', null, {root: true}))
+					.then(({data}) => {
+						context.commit('setCurrentUserAlbums', data)
+						return resolve(true)
 					})
 					.catch(error => {
 						return reject(error)
