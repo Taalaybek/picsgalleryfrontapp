@@ -55,11 +55,5 @@ export default new Vuex.Store({
     album: album,
     photo: photo
   },
-  plugins: [createPersistedState({
-    storage: {
-      getItem: key => Cookies.get(key),
-      setItem: (key, value) => Cookies.set(key, value, 60*60*24),
-      removeItem: key => Cookies.remove(key)
-    }
-  })]
+  plugins: [createPersistedState()]
 })

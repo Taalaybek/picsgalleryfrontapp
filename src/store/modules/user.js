@@ -1,17 +1,19 @@
 import Vue from 'vue'
-import router from '@/router/index'
-import TokenService from '@/services/TokenService'
 import {UNDEFINED_ERROR} from '@/services/constants'
 
 const user = {
+	namespaced: true,
+
 	state: {
-		attributes: '',
-		user: ''
+		attributes: null,
+		user: null
 	},
 
 	getters: {
 		getAttributes: state => state.attributes,
-		getUser: state => state.user
+		getUser(state) {
+			return state.user
+		}
 	},
 
 	mutations: {
@@ -25,10 +27,10 @@ const user = {
 
 	actions: {
 		fetchUserData(context) {
-			context.commit('overlayTrue')
+			context.commit('overlayTrue', null, {root: true})
 			return new Promise((resolve, reject) => {
 				window.axios.get('auth/user')
-					.finally(_ => context.commit('overlayFalse'))
+					.finally(_ => context.commit('overlayFalse', null, {root: true}))
 					.then(response => {
 						context.commit('setUser', response.data)
 						context.commit('setAttributes', response.data.attributes)

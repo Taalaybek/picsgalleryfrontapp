@@ -7,4 +7,5 @@ export const INVALID_TOKEN = 'Invalid access token' // 401
 export const RESOURCE_CREATED = 'Successfully created ' // 200
 
 export const API_URL = 'http://picsgallery.test:8080/api/v1'
+export const STORAGE_PATH = 'http://picsgallery.test:8080/storage/'
 export const BASE_URL = 'http://localhost:8081'

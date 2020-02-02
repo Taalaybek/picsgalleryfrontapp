@@ -47,7 +47,7 @@ const auth = {
 					return resolve(true)
 				})
 				.then(response => {
-					context.dispatch('fetchUserData')
+					context.dispatch('user/fetchUserData')
 					return resolve(response)
 				})
 				.catch(({response}) => {

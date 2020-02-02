@@ -83,7 +83,7 @@ export default {
 					albumData['description'] = this.album_description
 				}
 
-				this.createNewAlbum(albumData, this.file)
+				this.createNewAlbum(albumData)
 					.then(res => {
 						if (this.file) {
 							photoData.append('file', this.file, this.file.name)
