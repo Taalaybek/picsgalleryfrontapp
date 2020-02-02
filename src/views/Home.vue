@@ -135,16 +135,6 @@ export default {
 				}	
 			}
 		}
-		.download-icon {
-			:hover {
-				color: #cccccc;
-			}
-		}
-		.download-button {
-			:hover {
-				background-color: rgba(240, 240, 240, 0.9)
-			}
-		}
 	}
 
 	@media screen and (max-width: 750px) { 
