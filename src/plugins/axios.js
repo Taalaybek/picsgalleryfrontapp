@@ -42,7 +42,7 @@ _axios.interceptors.response.use(
   async function (error) {
     if (error.response.status == 401) {
       if (
-        error.response.request.requestURL == `${API_URL}/auth/login` || 
+        error.response.request.requestURL === `${API_URL}/auth/login` || 
         error.response.request.requestURL === `${API_URL}/auth/logout`
       ) {
         return Promise.reject(error);
@@ -54,8 +54,9 @@ _axios.interceptors.response.use(
           data: error.response.config.data,
         })
       }
+    } else {
+      return Promise.reject(error);
     }
-    return Promise.reject(error);
   }
 );
 
