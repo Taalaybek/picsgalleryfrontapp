@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import { UNDEFINED_ERROR } from '@/services/constants'
 
 const album = {
 	namespaced: true,
