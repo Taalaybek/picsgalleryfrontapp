@@ -39,8 +39,8 @@
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import { RESOURCE_CREATED, VALID_DATA } from '@/services/constants'
 import { ErrorBag } from 'vee-validate'
+
 export default {
 	name: 'album-create-form',
 
@@ -94,12 +94,12 @@ export default {
 
 							this.createNewPhotoAfterAlbum(photoData)
 							.then(res => {
-								this.$notify.set({content: RESOURCE_CREATED, color: 'success'})
+								this.$notify.set({content: process.env.VUE_APP_RESOURCE_CREATED, color: 'success'})
 								this.$store.commit('requestFalse')
 								this.clearForm()
 							})
 						} else {
-							this.$notify.set({content: RESOURCE_CREATED, color: 'success'})
+							this.$notify.set({content: process.env.VUE_APP_RESOURCE_CREATED, color: 'success'})
 							this.$store.commit('requestFalse')
 							this.clearForm()
 						}
@@ -107,7 +107,7 @@ export default {
 
 			} else {
 
-				this.$notify.set({ content: VALID_DATA, color: 'error' })
+				this.$notify.set({ content: process.env.VUE_APP_ENTER_VALID_DATA, color: 'error' })
 			}
 		},
 

@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import { UNDEFINED_ERROR } from '@/services/constants'
 
 const photo = {
 	namespaced: true,
@@ -28,7 +27,7 @@ const photo = {
 				 })
 				 .catch(error => {
 				 	if (error.response.status == 500) {
-					 Vue.$notify.set({content: UNDEFINED_ERROR, color: 'error'})
+					 Vue.$notify.set({content: process.env.VUE_APP_UNDEFINED_ERROR, color: 'error'})
 					}
 				 	return reject(error)
 				 })
