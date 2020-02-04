@@ -31,7 +31,6 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import {STORAGE_PATH} from '@/services/constants'
 import {VImg} from 'vuetify'
 
 export default {
@@ -39,7 +38,7 @@ export default {
 
 	data: () => ({
 		albumList: {},
-		base_url: STORAGE_PATH,
+		base_url: process.env.VUE_APP_STORAGE_URL,
 		meta: {},
 		links: {}
 	}),

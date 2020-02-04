@@ -2,7 +2,6 @@
 
 import Vue from 'vue';
 import axios from "axios";
-import {API_URL} from '@/services/constants'
 import TokenService from '@/services/TokenService'
 import store from '@/store/index'
 
@@ -12,7 +11,7 @@ import store from '@/store/index'
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 let config = {
-  baseURL: process.env.baseURL || process.env.apiUrl || API_URL,
+  baseURL: process.env.apiUrl || process.env.VUE_APP_API_URL,
   timeout: 60 * 1000, // Timeout
   // withCredentials: true, // Check cross-site Access-Control,
   headers: {
@@ -42,8 +41,8 @@ _axios.interceptors.response.use(
   async function (error) {
     if (error.response.status == 401) {
       if (
-        error.response.request.requestURL === `${API_URL}/auth/login` || 
-        error.response.request.requestURL === `${API_URL}/auth/logout`
+        error.response.request.requestURL === process.env.VUE_APP_API_URL + 'auth/login' || 
+        error.response.request.requestURL === process.env.VUE_APP_API_URL + 'auth/logout'
       ) {
         return Promise.reject(error);
       } else {

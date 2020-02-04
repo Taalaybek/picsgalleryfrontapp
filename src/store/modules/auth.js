@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import router from '@/router/index'
 import TokenService from '@/services/TokenService'
-import { UNDEFINED_ERROR, INVALID_TOKEN } from '@/services/constants'
 
 const auth = {
 	state: {
@@ -29,7 +28,7 @@ const auth = {
 				window.axios.post('auth/register', data)
 					.finally(_=> context.commit('requestFalse'))
 					.then(response => {
-						Vue.$notify.set({content: `${response.data.message} Check yout email`, color: 'success'})
+						Vue.$notify.set({content: `${response.data.message} ${process.env.VUE_APP_CHECK_EMAIL}`, color: 'success'})
 						return resolve(response)
 					})
 					.catch(error => reject(error))
@@ -56,7 +55,7 @@ const auth = {
 					}
 
 					if (response.status === 500) {
-						Vue.$notify.set({content: UNDEFINED_ERROR, color: 'error'})
+						Vue.$notify.set({content: process.env.VUE_APP_UNDEFINED_ERROR, color: 'error'})
 					}
 					return reject(response)
 				})
@@ -76,7 +75,7 @@ const auth = {
 					})
 					.catch(error => {
 						if (error.response.status == 500) {
-							Vue.$notify.set({content: UNDEFINED_ERROR, color: 'error'})
+							Vue.$notify.set({content: process.env.VUE_APP_UNDEFINED_ERROR, color: 'error'})
 						}
 					})
 			})

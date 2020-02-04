@@ -34,7 +34,6 @@
 </template>
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex'
-import { VALID_DATA, SUCCESS_LOGIN } from '@/services/constants'
 
 export default {
 	name: 'login',
@@ -61,7 +60,7 @@ export default {
 			const { username, password } = this
 			this.login({ username, password })
 				.then(response => {
-					this.$notify.set({content: SUCCESS_LOGIN, color: 'success'})
+					this.$notify.set({content: process.env.VUE_APP_SUCCESS_LOGIN, color: 'success'})
 					this.$router.push('/home')
 				})
 		},
@@ -69,7 +68,7 @@ export default {
 			if (!this.$validator.errors.any()) {
 				this.submit()
 			} else {
-				this.$notify.set({content: VALID_DATA, color: 'error'})
+				this.$notify.set({content: process.env.VUE_APP_ENTER_VALID_DATA, color: 'error'})
 			}
 		}
 	}
