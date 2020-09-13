@@ -2,7 +2,7 @@
 	<v-layout flex column>
 		<div id="columns">
 			<div class="card elevation-5 pa-1" v-for="(item, i) in albumList" :key="i">
-				<v-img :src="small(item)" width="100%" class="card-img" height="auto" :alt="albumName(item)">
+				<v-img :src="qtyPhotos(item) === 0 ? require('../assets/images/no-photo-available.png') : small(item)" width="100%" class="card-img" height="auto" :alt="albumName(item)">
 					<div class="card-actions">
 						<span class="card-up-actions px-2 d-flex justify-space-between" v-if="checkAuth && currentUserId == albumCreator(item).id">
 							<v-btn small min-width="30" color="grey lighten-3" class="pa-1">

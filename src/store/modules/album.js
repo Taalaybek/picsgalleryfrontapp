@@ -42,8 +42,8 @@ const album = {
 			context.commit('overlayTrue', null, {root: true})
 			return new Promise((resolve, reject) => {
 				window.axios.get('/albums/authenticatedUserAlbums')
-					.finally(_ => context.commit('overlayFalse', null, {root: true}))
-					.then(({data}) => {
+					.finally(() => context.commit('overlayFalse', null, {root: true}))
+					.then(({ data }) => {
 						context.commit('setCurrentUserAlbums', data)
 						return resolve(true)
 					})

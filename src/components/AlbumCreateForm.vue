@@ -1,4 +1,5 @@
 <template>
+	<!-- album create form -->
 	<v-layout d-flex column>
 		<v-system-bar color="primary" light height="45px" class="white--text subtitle-1 px-4">
 			{{ title }}
@@ -20,19 +21,14 @@
 
 				<!-- photo inputs -->
 				<template v-if="withPhoto">
-					<!-- photo description text input -->
-					<v-text-field name="photo_name" type="text" label="Photo name" v-model="photo_name" @keypress="nameChanged"
-					v-validate="'min:2|max:40'" :error-messages="errors.has('photo_name')?errors.first('photo_name'):''" outlined clearable></v-text-field>
-
-					<!-- photo file input -->
-					<v-file-input name="photo_file" label="Photo file" v-model="file" accept="image/png, image/jpeg, image/bmp" id="photo_file" class="required-input" v-validate="'size:10000|image|mimes:image/png,jpeg,bmp'" :error-messages="errors.has('photo_file')?errors.first('photo_file'):''" chips show-size ref="photo_file" outlined counter append-icon="mdi-asterisk" clearable></v-file-input>
+					<photo-create-form @file-processing="fileProcessing" />
 				</template>
 				<!-- end photo inputs -->
 			</v-card-text>
 			<v-card-actions>
 				<v-spacer></v-spacer>
 				<v-btn text class="grey--text" @click="clearForm">Clear</v-btn>
-				<v-btn color="primary" :disabled="$validator.errors.any() || isComplete()" @click="submit" outlined>{{ btnTitle }}</v-btn>
+				<v-btn color="primary" :disabled="$validator.errors.any() || isComplete() || disableAlbumForm" @click="submit" outlined>{{ btnTitle }}</v-btn>
 			</v-card-actions>
 		</v-card>
 	</v-layout>
@@ -40,15 +36,19 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import { ErrorBag } from 'vee-validate'
+import PhotoCreateForm from '@/components/PhotoCreateForm'
 
 export default {
 	name: 'album-create-form',
 
+	components: {
+		PhotoCreateForm
+	},
+
 	data: () => ({
 		album_name: '',
 		album_description: '',
-		photo_name: '',
-		file: null
+		disableAlbumForm: false
 	}),
 
 	props: {
@@ -71,11 +71,9 @@ export default {
 
 	methods: {
 		...mapActions('album', ['createNewAlbum']),
-		...mapActions('photo', ['createNewPhotoAfterAlbum']),
 
 		submit() {
 			const albumData = {}
-			const photoData = new FormData()
 			if (!this.$validator.errors.any()) {
 				this.$store.commit('requestTrue')
 				albumData['name'] = this.album_name
@@ -83,26 +81,16 @@ export default {
 					albumData['description'] = this.album_description
 				}
 
+				if (this.$store.getters['photo/getTemporaryPhotosId'].length > 0) {
+					albumData['photos'] = this.$store.getters['photo/getTemporaryPhotosId']
+				}H
+
 				this.createNewAlbum(albumData)
 					.then(res => {
-						if (this.file) {
-							photoData.append('file', this.file, this.file.name)
-
-							if (this.photo_name) {
-								photoData.append('file_name', this.photo_name)
-							}
-
-							this.createNewPhotoAfterAlbum(photoData)
-							.then(res => {
-								this.$notify.set({content: process.env.VUE_APP_RESOURCE_CREATED, color: 'success'})
-								this.$store.commit('requestFalse')
-								this.clearForm()
-							})
-						} else {
-							this.$notify.set({content: process.env.VUE_APP_RESOURCE_CREATED, color: 'success'})
-							this.$store.commit('requestFalse')
-							this.clearForm()
-						}
+						this.$notify.set({content: process.env.VUE_APP_RESOURCE_CREATED, color: 'success'})
+						this.$store.commit('requestFalse')
+						this.$store.commit('photo/clearPhotoTemps')
+						this.clearForm()
 					})
 
 			} else {
@@ -114,8 +102,6 @@ export default {
 		clearForm() {
 			this.album_name = ''
 			this.album_description = ''
-			this.photo_name = ''
-			this.file = null
 			this.$validator.reset()
 		},
 
@@ -123,15 +109,8 @@ export default {
 			return this.album_name.length == 0
 		},
 
-		nameChanged() {
-			if (this.photo_name !== '' && this.photo_name.length > 0 && this.file == null) {
-				this.$validator.errors.add({
-					field: 'photo_file',
-					msg: 'The photo_file field is required'
-				})
-			} else {
-				this.$validator.errors.remove('photo_file')
-			}
+		fileProcessing() {
+			this.disableAlbumForm = !this.disableAlbumForm
 		}
 	}
 }
